@@ -2,13 +2,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const fetchUsers = createAsyncThunk(
-  'users/fetchUsers',
-  async (thunkAPI) => {
-    const res = await axios
-      .get('https://jsonplaceholder.typicode.com/users')
-      .then((response) => response.data);
-    return res;
-    // will return 3 things pending, resolved, rejected
+  'users/fetchUsers', // thunkAPI is the 2nd argument
+
+  async (obj, thunkAPI) => {
+    try {
+      const res = await axios.get('https://jsonplaceholder.typicode.com/users');
+
+      return res.data;
+      // will return 3 things pending, resolved, rejected
+    } catch (err) {
+      return err;
+    }
   }
 );
 
@@ -17,6 +21,7 @@ export const userSlice = createSlice({
   initialState: {
     type: 'Guest',
     users: [],
+    loading: false,
   },
   reducers: {
     setType: (state, action) => {
@@ -27,11 +32,11 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
-        console.log('pending');
+        state.loading = true;
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.loading = false;
         state.users = action.payload;
-        console.log(state);
       })
       .addCase(fetchUsers.rejected, (state) => console.log('rejected'));
   },
