@@ -11,7 +11,7 @@ export const fetchUsers = createAsyncThunk(
       return res.data;
       // will return 3 things pending, resolved, rejected
     } catch (err) {
-      return err;
+      return thunkAPI.rejectWithValue('Yikes!');
     }
   }
 );
@@ -38,7 +38,9 @@ export const userSlice = createSlice({
         state.loading = false;
         state.users = action.payload;
       })
-      .addCase(fetchUsers.rejected, (state) => console.log('rejected'));
+      .addCase(fetchUsers.rejected, (state, action) =>
+        console.log(action.payload)
+      );
   },
 });
 
