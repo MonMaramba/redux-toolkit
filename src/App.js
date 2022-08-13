@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { addMovie } from './store/movies';
+import { setType } from './store/users';
 
-function App() {
+const App = () => {
+  const movies = useSelector((state) => state.movies.list);
+  const users = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h2>Movies</h2>
+      <ul>
+        {movies.map((movie) => (
+          <li key={movie.id}>{movie.title}</li>
+        ))}
+      </ul>
+      <hr />
+      <button onClick={() => dispatch(addMovie({ id: 3, title: 'Batman' }))}>
+        Add movie
+      </button>
+      <hr />
+      <h2>User type: {users.type}</h2>
+      <button onClick={() => dispatch(setType('Admin'))}>
+        Change user type
+      </button>
+    </>
   );
-}
+};
 
 export default App;
